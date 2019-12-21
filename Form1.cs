@@ -19,7 +19,7 @@ namespace Spin_The_Wheel
         static int i = 0;
         static bool isWheelSpinning = false;
         static Thread spinWheel = new Thread(SpinTheWheel);
-        static PictureBox wh = new PictureBox();
+        static PictureBox wh = new PictureBox(); //did this to be able to close the spinWheel thread anywher in code
 
         public Main()
         {
