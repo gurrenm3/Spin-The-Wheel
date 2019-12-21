@@ -13,82 +13,61 @@ namespace Spin_The_Wheel
 {
     public partial class Main : Form
     {
-        string livePath = Environment.CurrentDirectory;
+        static string livePath = Environment.CurrentDirectory;
         
-        Image[] images = new Image [8];
-        public int i = 0;
+        static Image[] images = new Image [8];
+        static int i = 0;
+        static bool isWheelSpinning = false;
+        static Thread spinWheel = new Thread(SpinTheWheel);
+        static PictureBox wh = new PictureBox();
 
         public Main()
         {
             InitializeComponent();
+            wh = Wheel_PictureBox;
         }
 
-        private void ChangeWheel_Image()
+        static void ChangeWheel_Image()
         {
-            string resourcePath = livePath + "\\resources\\";
-            
-            images[0] = Image.FromFile(resourcePath + "Slot 1 active.png");
-            images[1] = Image.FromFile(resourcePath + "Slot 2 active.png");
-            images[2] = Image.FromFile(resourcePath + "Slot 3 active.png");
-            images[3] = Image.FromFile(resourcePath + "Slot 4 active.png");
-            images[4] = Image.FromFile(resourcePath + "Slot 5 active.png");
-            images[5] = Image.FromFile(resourcePath + "Slot 6 active.png");
-            images[6] = Image.FromFile(resourcePath + "Slot 7 active.png");
-            images[7] = Image.FromFile(resourcePath + "Slot 8 active.png");
-
-            if (i + 1 > images.Length)
+            if (i + 1 >= images.Length)
                 i = 0;
+            else
+                i++;
 
-            Wheel_PictureBox.Invoke(new Action(() => Wheel_PictureBox.BackgroundImage = images[i]));
-            i++;
+            images[i] = Image.FromFile(livePath + "\\resources\\Slot " + (i + 1) + " active.png");
+            wh.Invoke(new Action(() => wh.BackgroundImage = images[i]));
         }
 
-        private void SpinTheWheel()
+        static void SpinTheWheel()
         {
             Random rand = new Random();
-            int fastSpin = rand.Next(45, 60);
-            int medSpin = rand.Next(14, 24);
-            int slowSpin = rand.Next(15, 23);
+            int cycle = 1;
 
-            //Fast spin speed
-            for (int x = 0; x < fastSpin; x++)
+            for (int y = 0;y<3;y++)
             {
-                ChangeWheel_Image();
-                GameTick(10);
+                //Fast spin speed
+                int fastSpin = rand.Next((55 - ((cycle - 1) * 20)), (65 - ((cycle - 1) * 15)));
+                for (int x = 0; x < fastSpin; x++)
+                {
+                    ChangeWheel_Image();
+                    Thread.Sleep(40 * cycle);
+                }
+                cycle++;
             }
 
-            //Meduim spin speed
-            for (int x = 0; x < medSpin; x++)
-            {
-                ChangeWheel_Image();
-                GameTick(40);
-            }
-            
-            //Slow spin speed
-            for (int x = 0; x < slowSpin; x++)
-            {
-                ChangeWheel_Image();
-                GameTick(100);
-            }
-
-            MessageBox.Show("Congrats!! You won prize " + GivePrize());
+            isWheelSpinning = false;
+            MessageBox.Show("Congrats!! You won prize " + (i + 1));
+            spinWheel.Abort();
         }
 
         private void Spin_Button_Click(object sender, EventArgs e)
         {
-            Thread spinWheel = new Thread(SpinTheWheel);
-            spinWheel.Start();
-        }
-
-        private int GivePrize()
-        {
-            int prizeNum = i;
-            return prizeNum;
-        }
-
-        private void GameTick(int tickSpeed)
-        {
-            Thread.Sleep(tickSpeed);
+            if (!isWheelSpinning)
+            {
+                Thread spinWheel = new Thread(SpinTheWheel);
+                isWheelSpinning = true;
+                spinWheel.Start();
+            }            
         }
     }
 }

@@ -94,7 +94,7 @@
 
         private System.Windows.Forms.Label Title_Label;
         private System.Windows.Forms.Button Spin_Button;
-        private System.Windows.Forms.PictureBox Wheel_PictureBox;
+        public System.Windows.Forms.PictureBox Wheel_PictureBox;
     }
 }
 
