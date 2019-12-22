@@ -14,8 +14,8 @@ namespace Spin_The_Wheel
     public partial class Main : Form
     {
         static string livePath = Environment.CurrentDirectory;
-        
-        static Image[] images = new Image [8];
+
+        static Image[] images = new Image[8];
         static int i = 0;
         static bool isWheelSpinning = false;
         static Thread spinWheel = new Thread(SpinTheWheel);
@@ -43,7 +43,7 @@ namespace Spin_The_Wheel
             Random rand = new Random();
             int cycle = 1;
 
-            for (int y = 0;y<3;y++)
+            for (int y = 0; y < 3; y++)
             {
                 //Fast spin speed
                 int fastSpin = rand.Next((55 - ((cycle - 1) * 20)), (65 - ((cycle - 1) * 15)));
@@ -67,7 +67,7 @@ namespace Spin_The_Wheel
                 Thread spinWheel = new Thread(SpinTheWheel);
                 isWheelSpinning = true;
                 spinWheel.Start();
-            }            
+            }
         }
     }
 }
